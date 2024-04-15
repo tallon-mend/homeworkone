@@ -1,1 +1,45 @@
+name: homeworkone
 
+on:
+
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  workflow_dispatch:
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout project sources
+        uses: actions/checkout@v4
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+
+      - name: Downloading UA Client
+        run: |
+          echo "Downloading the UA"
+          curl -LJ "https://github.com/whitesource/unified-agent-distribution/releases/latest/download/wss-unified-agent.jar" -o "UA.jar"
+
+      - name: Verifying the UA scanner
+        run: |
+          echo "Verifying the UA"
+          java -jar "UA.jar" -v
+      
+      - name: Scan with UA
+        env:
+          WS_NPM_RESOLVEDEPENDENCIES: true
+          WS_APIKEY: ${{ secrets.APIKEY }}
+          WS_USERKEY: ${{ secrets.MEND_USER_KEY }}
+          WS_WSS_URL: ${{ secrets.WS_WSS_URL }}
+          WS_PRODUCTNAME: Homework3
+          WS_PROJECTNAME: UApnpm
+          WS_LOG_LEVEL: DEBUG
+        run: java -jar UA.jar
