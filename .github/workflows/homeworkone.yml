@@ -34,7 +34,10 @@ jobs:
         run: |
           echo "Verifying the UA"
           java -jar "UA.jar" -v
-      
+
+      - name: Building PNPM Project
+        run: pnpm install
+        
       - name: Scan with UA
         env:
           WS_NPM_RESOLVEDEPENDENCIES: true
@@ -42,6 +45,6 @@ jobs:
           WS_USERKEY: ${{ secrets.USERKEY }}
           WS_WSS_URL: ${{ secrets.WSS_URL }}
           WS_PRODUCTNAME: Homework3
-          WS_PROJECTNAME: UApnpm
+          WS_PROJECTNAME: UApnpmRedo
           WS_LOG_LEVEL: DEBUG
         run: java -jar UA.jar
